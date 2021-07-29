@@ -32,16 +32,16 @@ const getArticles = async () => {
         const title = post(".post-title").text().trim();
         const author = post(".author-name").text().trim();
         const postingDate = post(".post-date > span").text().trim();
-        let relatedArticle = [];
+        let relatedArticles = [];
         post(".panel-items-list")
           .first()
           .children("li")
           .each(function () {
             relatedTitle = post(this).find("h5").text();
             relatedUrl = post(this).find("a").attr("href");
-            relatedArticle.push({
-              relatedTitle,
-              relatedUrl,
+            relatedArticles.push({
+              url: relatedUrl,
+              title: relatedTitle,
             });
           });
 
@@ -49,7 +49,7 @@ const getArticles = async () => {
           title,
           author,
           postingDate,
-          relatedArticle,
+          relatedArticles,
         });
       })
     );
@@ -60,6 +60,7 @@ const getArticles = async () => {
 };
 
 getArticles().then((resolvedValue) => {
+  // console.log(resolvedValue);
   const writableStream = fs.createWriteStream("solution.json");
   writableStream.write(JSON.stringify(resolvedValue));
   writableStream.end();
